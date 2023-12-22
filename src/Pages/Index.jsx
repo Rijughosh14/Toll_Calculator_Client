@@ -20,6 +20,8 @@ const Index = () => {
     const [selectedVehicleType, setSelectedVehicleType] = useState('')
     const [PolylineDetails, SetPolylineDetails] = useState()
     const [ActiveTollDetails, SetActiveTollDetails] = useState('')
+    const [Bounds, setBounds] = useState([])
+
 
     //toggle between the origin and destination input as well as on marker
     const [toggle, setToggle] = useState(true)
@@ -93,6 +95,7 @@ const Index = () => {
         if (Origin === '' || Destination === '' || (Vehicle === '' && selectedVehicleType === '')) return
         const response = await getRoute(originMarker, destinationMarker, selectedVehicle)
         SetPolylineDetails(response)
+        setBounds([[originMarker.lat,originMarker.lng],[destinationMarker.lat,destinationMarker.lng]])
     }
 
     //handling the active toll details to view on the map
@@ -106,7 +109,7 @@ const Index = () => {
                 <div className="bg-gray-100 text-gray-500 rounded-3xl shadow-xl w-full overflow-hidden">
                     <div className="md:flex w-full">
                         <div id={'TollMap'} className='w-1/2 h-full border border-red-200'>
-                            <MapComponent toggle={toggle} setOrigin={setOrigin} setDestination={setDestination} originMarker={originMarker} destinationMarker={destinationMarker} PolylineDetails={PolylineDetails} ActiveTollDetails={ActiveTollDetails} />
+                            <MapComponent toggle={toggle} setOrigin={setOrigin} setDestination={setDestination} originMarker={originMarker} destinationMarker={destinationMarker} PolylineDetails={PolylineDetails} ActiveTollDetails={ActiveTollDetails} Bounds={Bounds} />
                         </div>
                         <div className="w-full md:w-1/2 py-10 px-5 md:px-10">
                             <div className="text-center mb-10">

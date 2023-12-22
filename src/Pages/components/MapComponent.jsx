@@ -8,7 +8,7 @@ import { decode } from "@googlemaps/polyline-codec";
 import { getAddressBycoOrdinates } from '../../Services/UserServices'
 
 
-const MapComponent = React.memo(({ setDestination, setOrigin, toggle, originMarker, destinationMarker, PolylineDetails,ActiveTollDetails }) => {
+const MapComponent = React.memo(({ setDestination, setOrigin, toggle, originMarker, destinationMarker, PolylineDetails, ActiveTollDetails,Bounds }) => {
   // state for storing the user current(origin)  location
   const [useroriginLocation, setUserOriginLocation] = useState(null);
   const [userdestinationLocation, setUserDestinationLocation] = useState(null);
@@ -151,9 +151,17 @@ const MapComponent = React.memo(({ setDestination, setOrigin, toggle, originMark
     }
   }, [destinationMarker]);
 
+  useEffect(()=>{
+    if(Bounds.length>0){
+      if(map){
+        map.fitBounds(Bounds)
+      }
+    }
+  },[Bounds])
+
 
   return (
-    <MapContainer center={[22.3511148, 78.6677428]} zoom={5} scrollWheelZoom={true} ref={setMap} style={{ height: '550px' }}>
+    <MapContainer center={[22.3511148, 78.6677428]} bounds={Bounds} zoom={5} scrollWheelZoom={true} ref={setMap} style={{ height: '550px' }}>
       <TileLayer
         attribution='Drag pointer to your location'
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
@@ -178,7 +186,7 @@ const MapComponent = React.memo(({ setDestination, setOrigin, toggle, originMark
               pathOptions={{ color: ActiveTollDetails === index ? 'blue' : 'red' }}
               positions={decode(route.polyline)}
             />
-            {(route.data.hasTolls === true&&ActiveTollDetails===index) && route.data.tolls.map((toll, i) => {
+            {(route.data.hasTolls === true && ActiveTollDetails === index) && route.data.tolls.map((toll, i) => {
               return (
                 <Marker key={i} position={[toll.lat, toll.lng]}>
                   <Tooltip permanent><p>Name:{toll.name}<br />CashCost:{toll.cashCost}<br />TagCost:{toll.tagCost}</p></Tooltip>
