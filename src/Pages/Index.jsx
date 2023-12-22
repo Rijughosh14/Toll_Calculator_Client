@@ -107,7 +107,7 @@ const Index = () => {
         <>
             <div className="min-w-screen bg-gray-900 min-h-screen flex items-center justify-center px-10 py-10">
                 <div className="bg-gray-100 text-gray-500 rounded-3xl shadow-xl w-full overflow-hidden">
-                    <div className="md:flex w-full">
+                    <div className="md:flex w-full h-full">
                         <div id={'TollMap'} className='w-1/2 h-full border border-red-200'>
                             <MapComponent toggle={toggle} setOrigin={setOrigin} setDestination={setDestination} originMarker={originMarker} destinationMarker={destinationMarker} PolylineDetails={PolylineDetails} ActiveTollDetails={ActiveTollDetails} Bounds={Bounds} />
                         </div>

@@ -186,12 +186,20 @@ const MapComponent = React.memo(({ setDestination, setOrigin, toggle, originMark
               pathOptions={{ color: ActiveTollDetails === index ? 'blue' : 'red' }}
               positions={decode(route.polyline)}
             />
-            {(route.data.hasTolls === true && ActiveTollDetails === index) && route.data.tolls.map((toll, i) => {
-              return (
-                <Marker key={i} position={[toll.lat, toll.lng]}>
-                  <Tooltip permanent><p>Name:{toll.name}<br />CashCost:{toll.cashCost}<br />TagCost:{toll.tagCost}</p></Tooltip>
-                </Marker>
+            {(route.data.hasTolls === true&&ActiveTollDetails === index) && route.data.tolls.map((toll, i) => {
+              if(toll.type!=='barrier'){
+                return (
+                  <Marker key={i} position={[toll.start.lat, toll.start.lng]}>
+                    <Tooltip permanent><p>Name:{toll.name}<br />CashCost:{toll.cashCost}<br />TagCost:{toll.tagCost}</p></Tooltip>
+                  </Marker>
+                )
+              }
+              return(
+              <Marker key={i} position={[toll.lat, toll.lng]}>
+                    <Tooltip permanent><p>Name:{toll.name}<br />CashCost:{toll.cashCost}<br />TagCost:{toll.tagCost}</p></Tooltip>
+              </Marker>
               )
+
             }
             )
             }
