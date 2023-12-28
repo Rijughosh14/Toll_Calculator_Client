@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { Options } from '../Options/Options'
 import { getAddressBySearch, getRoute } from '../Services/UserServices'
 import MapComponent from './components/MapComponent'
+import { toast } from 'react-toastify';
 
 
 
@@ -19,7 +20,7 @@ const Index = () => {
     const [selectedVehicle, setSelectedVehicle] = useState('')
     const [selectedVehicleType, setSelectedVehicleType] = useState('')
     const [PolylineDetails, SetPolylineDetails] = useState()
-    const [ActiveTollDetails, SetActiveTollDetails] = useState('')
+    const [ActiveTollDetails, SetActiveTollDetails] = useState(0)
     const [Bounds, setBounds] = useState([])
 
 
@@ -93,9 +94,19 @@ const Index = () => {
     const SubmitJourneyDetails = async (e) => {
         e.preventDefault();
         if (Origin === '' || Destination === '' || (Vehicle === '' && selectedVehicleType === '')) return
-        const response = await getRoute(originMarker, destinationMarker, selectedVehicle)
-        SetPolylineDetails(response)
-        setBounds([[originMarker.lat,originMarker.lng],[destinationMarker.lat,destinationMarker.lng]])
+        try {            
+            const response = await toast.promise( getRoute(originMarker, destinationMarker, selectedVehicle),
+            {
+                pending: 'Fetching Details',
+                success: 'Done 👌',
+                error: 'Something went wrong Try again 🤯'
+                      
+            })
+            SetPolylineDetails(response)
+            setBounds([[originMarker.lat,originMarker.lng],[destinationMarker.lat,destinationMarker.lng]])
+        } catch (error) {
+            toast.error(error.message)
+        }
     }
 
     //handling the active toll details to view on the map
@@ -107,7 +118,7 @@ const Index = () => {
         <>
             <div className="min-w-screen bg-gray-900 min-h-screen flex items-center justify-center px-10 py-10">
                 <div className="bg-gray-100 text-gray-500 rounded-3xl shadow-xl w-full overflow-hidden">
-                    <div className="md:flex w-full h-full">
+                    <div className="md:flex w-full">
                         <div id={'TollMap'} className='w-1/2 h-full border border-red-200'>
                             <MapComponent toggle={toggle} setOrigin={setOrigin} setDestination={setDestination} originMarker={originMarker} destinationMarker={destinationMarker} PolylineDetails={PolylineDetails} ActiveTollDetails={ActiveTollDetails} Bounds={Bounds} />
                         </div>
@@ -121,7 +132,7 @@ const Index = () => {
                                     <div className="w-1/2 px-3 mb-5">
                                         <label htmlFor="" className="text-xs font-semibold px-1">Origin</label>
                                         <div className="flex flex-col relative">
-                                            <input type="text" className="w-full  ml-2 pl-1  pr-3 py-2 rounded-lg border-2 border-gray-200 outline-none focus:border-indigo-500" value={Origin} placeholder="Search,Click on the map " onClick={() => setToggle(true)}
+                                            <input type="text" className="w-full  ml-2 pl-1  pr-3 py-2 rounded-lg border-2 border-gray-200 outline-none focus:border-indigo-500" value={Origin} placeholder="Search, Double Click on the map " onClick={() => setToggle(true)}
                                                 onChange={(e) => HandleOriginChange(e.target.value)} />
                                             {(OriginOptions && OriginOptions.length > 0&&toggle===true) &&
                                                 <div className=' z-10 w-full ml-2 pl-1 h-32 flex overflow-auto  pr-3 py-2 rounded-lg border-2 bg-white border-gray-200 outline-none absolute top-11'>
@@ -143,7 +154,7 @@ const Index = () => {
                                     <div className="w-1/2 px-3 mb-5">
                                         <label htmlFor="" className="text-xs font-semibold px-1">Destination</label>
                                         <div className="flex flex-col relative">
-                                            <input type="text" className="w-full ml-2 pl-1 pr-3 py-2 rounded-lg border-2 border-gray-200 outline-none focus:border-indigo-500" value={Destination} placeholder="Search,Click on the map" onClick={() => setToggle(false)} onChange={(e) => HandleDestinationChange(e.target.value)} />
+                                            <input type="text" className="w-full ml-2 pl-1 pr-3 py-2 rounded-lg border-2 border-gray-200 outline-none focus:border-indigo-500" value={Destination} placeholder="Search,Double Click on the map" onClick={() => setToggle(false)} onChange={(e) => HandleDestinationChange(e.target.value)} />
                                             {(DestinationOptions && DestinationOptions.length > 0&&toggle===false) &&
                                                 <div className=' z-10 w-full ml-2 pl-1 h-32 flex overflow-auto  pr-3 py-2 rounded-lg border-2 bg-white border-gray-200 outline-none absolute top-11'>
                                                     <ul className=''>
@@ -171,7 +182,8 @@ const Index = () => {
                                                 {
                                                     Options.map((data, index) => {
                                                         return (
-                                                            <option key={index} value={data.Description}>{data.Description}</option>
+                                                            <option key={index} value={data.Description}>{data.Description}
+                                                            </option>
                                                         )
                                                     })
                                                 }

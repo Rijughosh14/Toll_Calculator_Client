@@ -33,7 +33,7 @@ const MapComponent = React.memo(({ setDestination, setOrigin, toggle, originMark
                 setOrigin(data[0].title, marker1.getLatLng())
               }
               else {
-                setOrigin(' ', marker1.getLatLng())
+                setOrigin('No Location Found', marker1.getLatLng())
               }
             })
         }
@@ -55,7 +55,7 @@ const MapComponent = React.memo(({ setDestination, setOrigin, toggle, originMark
                 setDestination(data[0].title, marker.getLatLng())
               }
               else {
-                setDestination(' ', marker.getLatLng())
+                setDestination('No Location Found ', marker.getLatLng())
               }
             })
         }
@@ -67,7 +67,7 @@ const MapComponent = React.memo(({ setDestination, setOrigin, toggle, originMark
   // setting the location by clicking on the map
   const OnClick = () => {
     useMapEvents({
-      click: (e) => {
+      dblclick: (e) => {
         const { lat, lng } = e.latlng;
         if (toggle) {
           // setUserOriginLocation({ lat, lng })
@@ -77,7 +77,7 @@ const MapComponent = React.memo(({ setDestination, setOrigin, toggle, originMark
                 setOrigin(data[0].title, { lat, lng })
               }
               else {
-                setOrigin(' ', { lat, lng })
+                setOrigin('No Location Found', { lat, lng })
               }
             })
         }
@@ -89,7 +89,7 @@ const MapComponent = React.memo(({ setDestination, setOrigin, toggle, originMark
                 setDestination(data[0].title, { lat, lng })
               }
               else {
-                setDestination(' ', { lat, lng })
+                setDestination('No Location Found', { lat, lng })
               }
             })
         }
@@ -110,7 +110,7 @@ const MapComponent = React.memo(({ setDestination, setOrigin, toggle, originMark
                 setOrigin(data[0].title, { lat: latitude, lng: longitude })
               }
               else {
-                setOrigin(' ', { lat: latitude, lng: longitude })
+                setOrigin('No Location Found', { lat: latitude, lng: longitude })
               }
             })
 
